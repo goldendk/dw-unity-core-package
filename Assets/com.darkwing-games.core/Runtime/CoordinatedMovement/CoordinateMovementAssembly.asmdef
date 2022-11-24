@@ -1,6 +1,6 @@
 {
-    "name": "Darkwing-games-core",
-    "rootNamespace": "DWGames",
+    "name": "CoordinateMovementAssembly",
+    "rootNamespace": "DWGames.CoordinatedMovement",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
