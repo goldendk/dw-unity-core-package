@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace DWGames.CoordinatedMovement
 {
@@ -56,6 +57,11 @@ namespace DWGames.CoordinatedMovement
         [Range(0, 3)]
         public float catchUpDistance = 0.3f;
 
+        
+ 
+
+        [NonSerialized] public FollowStateEvent followStateListeners = new FollowStateEvent(); 
+        
         /* 'current values */
         private float currentSpeed;
         public float currentAngleToTarget;
@@ -86,12 +92,23 @@ namespace DWGames.CoordinatedMovement
             if (moveTowardsTargetIfNeeded == TargetFollowState.IN_POSITION &&
                 faceTargetIfNeeded == TargetFollowState.IN_POSITION)
             {
-                currentFollowState = TargetFollowState.IN_POSITION;
+                UpdateStateIfNeeded(TargetFollowState.IN_POSITION);
             }
             else
             {
-                currentFollowState = TargetFollowState.CATCHING_UP;
+                UpdateStateIfNeeded(TargetFollowState.CATCHING_UP);
             }
+        }
+
+        private void UpdateStateIfNeeded(TargetFollowState newState)
+        {
+            var tempCurrentState = currentFollowState;
+            currentFollowState = newState;
+            if (tempCurrentState != newState)
+            {
+                followStateListeners.Invoke(gameObject, newState);
+            }
+
         }
 
         /**
@@ -200,5 +217,11 @@ namespace DWGames.CoordinatedMovement
                 return TargetFollowState.IN_POSITION;
             }
         }
+    }
+    
+    [Serializable]
+    public class FollowStateEvent : UnityEvent<GameObject, TargetFollowState>
+    {
+            
     }
 }
