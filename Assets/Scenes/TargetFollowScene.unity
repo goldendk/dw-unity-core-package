@@ -191,7 +191,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh35134
+  m_Name: pb_Mesh23774
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -958,6 +958,7 @@ GameObject:
   - component: {fileID: 1679885279}
   - component: {fileID: 1679885278}
   - component: {fileID: 1679885282}
+  - component: {fileID: 1679885284}
   m_Layer: 0
   m_Name: Follower
   m_TagString: Untagged
@@ -1057,6 +1058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34339376f0824939adebb1cba70564de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CLAMP_TO_GROUND_RAYCAST_Y_OFFSET: 50
   moveSpeed: 1
   turnSpeed: 60
   angleTotargetTranslationLimit: 5
@@ -1068,6 +1070,20 @@ MonoBehaviour:
   currentTarget: {fileID: 2034584677}
   currentFollowState: 0
   currentDistanceToTarget: 0
+--- !u!114 &1679885284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679885277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd3c5a88e27de2b428a4fa4994ec2070, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeCount: 0
+  currentState: 0
 --- !u!1 &1849552320
 GameObject:
   m_ObjectHideFlags: 0
