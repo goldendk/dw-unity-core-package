@@ -132,7 +132,7 @@ namespace DWGames.com.darkwing_games.core.Runtime.Util
             //keys are index, values are the number of zeros.
             var rowSorted = rowZeroCount.OrderBy((e) => e.Value).ToList();
             var colSorted = colZeroCount.OrderBy((e) => e.Value).ToList();
-            int lines = 0;
+            //int lines = 0;
             while (rowZeroCount.Count > 0 && colZeroCount.Count > 0)
             {
                 //if we have both then figure out which to remove from.
