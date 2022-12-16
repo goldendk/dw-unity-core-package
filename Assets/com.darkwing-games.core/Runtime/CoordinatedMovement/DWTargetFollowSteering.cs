@@ -1,4 +1,5 @@
 ﻿using System;
+using Codice.CM.Common.Merge;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -33,6 +34,8 @@ namespace DWGames.CoordinatedMovement
         public float moveSpeed = 5.0f;
         public float turnSpeed = 90f;
 
+        public ITargetFollowSpeedProvider speedProvider;
+        
         [Tooltip(
             "The minimum angle to target before the 'follower' will start to move forward. Will only rotate if angle is higher.")]
         [Range(0, 180)]
@@ -40,10 +43,7 @@ namespace DWGames.CoordinatedMovement
 
         [Tooltip("The angle to target where the model will stop turning. e.g. 3 degrees.")] [Range(0, 180)]
         public float stoppingRotationAngle = 3f;
-
-        /*
-         * TODO: Evaluate if this should be removed. We want to rotate when we reach target and face the same way - or make that a strategy                                                                         
-         */
+        
         [Tooltip(
             "If distance to target is higher then faces the target. If lower rotates to face target 'Forward' vector.")]
         [Range(0, 2)]
@@ -56,24 +56,33 @@ namespace DWGames.CoordinatedMovement
         [Tooltip("The distance from target where the follower will report as being catched up to the target.")]
         [Range(0, 3)]
         public float catchUpDistance = 0.3f;
-
         
- 
 
         [NonSerialized] public FollowStateEvent followStateListeners = new FollowStateEvent(); 
         
-        /* 'current values */
+        [Header("Runtime values")]
         private float currentSpeed;
         public float currentAngleToTarget;
         public Transform currentTarget;
         public TargetFollowState currentFollowState;
         public float currentDistanceToTarget;
+        public TranslationMode translationMode = TranslationMode.NONE;
 
-        private void Start()
+        private void Awake()
         {
             currentSpeed = 0;
             currentAngleToTarget = 0;
             currentFollowState = TargetFollowState.IN_POSITION;
+            speedProvider = new DefaultSpeedProvider(this);
+        }
+
+
+        private void Start()
+        {
+            if (translationMode == TranslationMode.NONE)
+            {
+                Debug.LogWarning("TranslationMode is set to NONE.");
+            }
         }
 
 
@@ -199,9 +208,18 @@ namespace DWGames.CoordinatedMovement
             if (currentDistanceToTarget > stoppingDistance) //move to the designated point. 
             {
                 //TODO: When the current angle becomes less than the translations limit then the object will start moving which it should NOT! 
-                currentSpeed = moveSpeed;
-                transform.position = Vector3.MoveTowards(transform.position, TargetPositionLockedY(),
-                    currentSpeed * Time.deltaTime);
+                currentSpeed = speedProvider.getSpeed();
+
+                
+                if (translationMode == TranslationMode.FORWARD)
+                {
+                    transform.Translate(Vector3.forward * Time.deltaTime * currentSpeed);    
+                }
+                else if(translationMode == TranslationMode.MOVE_TOWARDS)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, TargetPositionLockedY(), currentSpeed * Time.deltaTime);    
+                }
+                
             }
             else
             {
@@ -217,6 +235,23 @@ namespace DWGames.CoordinatedMovement
                 return TargetFollowState.IN_POSITION;
             }
         }
+        public enum TranslationMode
+        {
+            MOVE_TOWARDS, FORWARD, NONE
+        }
+        private class DefaultSpeedProvider : ITargetFollowSpeedProvider
+        {
+            private readonly DWTargetFollowSteering steering;
+
+            public DefaultSpeedProvider(DWTargetFollowSteering steering)
+            {
+                this.steering = steering;
+            }
+            public float getSpeed()
+            {
+                return steering.moveSpeed;
+            }
+        }
     }
     
     [Serializable]
@@ -224,4 +259,6 @@ namespace DWGames.CoordinatedMovement
     {
             
     }
+    
+    
 }

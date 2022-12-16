@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class WaypointPathing : MonoBehaviour
 {
-
+    public float currentSpeed;
     public Transform[] waypoints;
     public Transform currentTarget;
     public float stoppingDistance = 0.1f;
     // Start is called before the first frame update
     private int idx = 0;
-    public float speed = 5f;
+    public float maxSpeed = 5f;
     void Start()
     {
         currentTarget = waypoints[0];
+        currentSpeed = 0;
     }
 
     // Update is called once per frame
@@ -24,11 +25,17 @@ public class WaypointPathing : MonoBehaviour
         {
             idx++;
             currentTarget = waypoints[idx % waypoints.Length];
+            currentSpeed = 0;
         }
         
         //move toward the target.
         var direction = currentTarget.position - transform.position;
         direction = direction.normalized;
-        transform.Translate(direction * Time.deltaTime * speed);
+        if (currentSpeed < maxSpeed)
+        {
+            currentSpeed = maxSpeed;
+        }
+        
+        transform.Translate(direction * Time.deltaTime * currentSpeed);
     }
 }
