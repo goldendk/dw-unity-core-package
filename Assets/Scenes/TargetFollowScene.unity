@@ -1059,7 +1059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CLAMP_TO_GROUND_RAYCAST_Y_OFFSET: 50
-  moveSpeed: 1
+  moveSpeed: 2.02
   turnSpeed: 60
   angleTotargetTranslationLimit: 5
   stoppingRotationAngle: 3
@@ -1070,6 +1070,7 @@ MonoBehaviour:
   currentTarget: {fileID: 2034584677}
   currentFollowState: 0
   currentDistanceToTarget: 0
+  translationMode: 1
 --- !u!114 &1679885284
 MonoBehaviour:
   m_ObjectHideFlags: 0

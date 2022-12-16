@@ -34,7 +34,9 @@ namespace DWGames.CoordinatedMovement
         public float moveSpeed = 5.0f;
         public float turnSpeed = 90f;
 
-        public ITargetFollowSpeedProvider speedProvider;
+        public delegate float SpeedProviderDelegate();
+
+        public SpeedProviderDelegate SpeedProvider;
         
         [Tooltip(
             "The minimum angle to target before the 'follower' will start to move forward. Will only rotate if angle is higher.")]
@@ -73,7 +75,7 @@ namespace DWGames.CoordinatedMovement
             currentSpeed = 0;
             currentAngleToTarget = 0;
             currentFollowState = TargetFollowState.IN_POSITION;
-            speedProvider = new DefaultSpeedProvider(this);
+            SpeedProvider = ()=> moveSpeed;
         }
 
 
@@ -208,7 +210,7 @@ namespace DWGames.CoordinatedMovement
             if (currentDistanceToTarget > stoppingDistance) //move to the designated point. 
             {
                 //TODO: When the current angle becomes less than the translations limit then the object will start moving which it should NOT! 
-                currentSpeed = speedProvider.getSpeed();
+                currentSpeed = SpeedProvider.Invoke();
 
                 
                 if (translationMode == TranslationMode.FORWARD)
@@ -219,21 +221,15 @@ namespace DWGames.CoordinatedMovement
                 {
                     transform.position = Vector3.MoveTowards(transform.position, TargetPositionLockedY(), currentSpeed * Time.deltaTime);    
                 }
-                
-            }
-            else
-            {
-                currentSpeed = 0;
-            }
 
-            if (currentDistanceToTarget > catchUpDistance)
-            {
                 return TargetFollowState.CATCHING_UP;
             }
             else
             {
+                currentSpeed = 0;
                 return TargetFollowState.IN_POSITION;
             }
+            
         }
         public enum TranslationMode
         {
