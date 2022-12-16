@@ -235,19 +235,7 @@ namespace DWGames.CoordinatedMovement
         {
             MOVE_TOWARDS, FORWARD, NONE
         }
-        private class DefaultSpeedProvider : ITargetFollowSpeedProvider
-        {
-            private readonly DWTargetFollowSteering steering;
-
-            public DefaultSpeedProvider(DWTargetFollowSteering steering)
-            {
-                this.steering = steering;
-            }
-            public float getSpeed()
-            {
-                return steering.moveSpeed;
-            }
-        }
+     
     }
     
     [Serializable]
